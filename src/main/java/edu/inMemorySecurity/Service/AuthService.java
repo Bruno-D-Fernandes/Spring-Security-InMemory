@@ -11,9 +11,9 @@ public record AuthService(UserRepo userRepo) implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        UserDetails userDetails = (UserDetails) userRepo.getAllUsers().stream()
-                .filter(user -> user.username().equals(username));
-
-        return userDetails;
+        return userRepo.getAllUsers().stream()
+                .filter(user -> user.username().equals(username))
+                .findFirst()
+                .orElseThrow(() -> new UsernameNotFoundException("usuário não encontrado: " + username));
     }
 }

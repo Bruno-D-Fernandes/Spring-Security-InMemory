@@ -1,36 +1,39 @@
 package edu.inMemorySecurity.user;
 
-
+import edu.inMemorySecurity.user.User;
+import edu.inMemorySecurity.user.UserRole;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
-import java.lang.ref.SoftReference;
 import java.util.ArrayList;
-import java.util.DoubleSummaryStatistics;
 import java.util.List;
-import java.util.stream.Stream;
 
-//DAO
 @Repository
 public class UserRepo {
 
-    List<User> userData = new ArrayList<User>();
+    private final PasswordEncoder passwordEncoder;
+    private final List<User> userData;
 
-    public void saveUser(User user){
+    @Autowired
+    public UserRepo(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+        this.userData = new ArrayList<>();
+    }
+
+    public void saveUser(User user) {
         this.userData.add(user);
     }
 
-    public List<User> getAllUsers(){
+    public List<User> getAllUsers() {
         return List.copyOf(userData);
     }
 
-    public void clearUsers(){
+    public void clearUsers() {
         this.userData.clear();
     }
 
-    // fazer algo com strem aqui.
-    public long getStatistics(){
-
-        long quantidade = userData.size();
-        return quantidade;
+    public long getStatistics() {
+        return userData.size();
     }
 }

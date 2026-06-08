@@ -10,13 +10,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController             // Poderia fazer uma camada de service tbm
 @RequestMapping(value = "users")
-public record UserController(UserRepo userRepo) {
+public record UserController(UserRepo userRepo, PasswordEncoder passwordEncoder) {
 
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
@@ -30,9 +31,9 @@ public record UserController(UserRepo userRepo) {
     public ResponseEntity createUser(@RequestBody User user){
         if(userRepo.getAllUsers().contains(user)) throw new UsernameAlreadyInUseException();
 
-        log.info("Criando usuário");
-        userRepo.saveUser(user);
 
+        log.info("Criando usuário");
+        userRepo.saveUser(new User(user.username(), passwordEncoder.encode(user.getPassword()), user.role()));
         return ResponseEntity.ok().build();
     }
 
