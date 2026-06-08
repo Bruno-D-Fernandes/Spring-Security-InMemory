@@ -45,4 +45,9 @@ public record UserController(UserRepo userRepo) {
 
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("statistics")
+    public ResponseEntity getStatistics(){
+        return ResponseEntity.ok(userRepo.getStatistics());
+    }
 }
